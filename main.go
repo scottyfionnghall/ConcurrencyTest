@@ -50,17 +50,11 @@ func sent(streamer_name string) (map[string]string, error) {
 
 // Create a goroutine that for each name in the array of names will output the result into
 // out channel
-func group_streamer(names ...string) <-chan map[string]string {
-	out := make(chan map[string]string, len(names))
+func group_streamer(name string) <-chan map[string]string {
+	out := make(chan map[string]string, 1)
 	go func() {
-		for _, streamer := range names {
-			data, err := sent(streamer)
-			if err != nil {
-				fmt.Println(err)
-				return
-			}
-			out <- data
-		}
+		data, _ := sent(name)
+		out <- data
 		close(out)
 	}()
 	return out
